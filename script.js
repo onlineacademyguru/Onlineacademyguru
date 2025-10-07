@@ -1,6 +1,8 @@
-document.getElementById("contactForm")?.addEventListener("submit", function(e) {
+document.getElementById("contactForm")?.addEventListener("submit", function (e) {
   e.preventDefault();
-  document.getElementById("formMessage").textContent = "✅ Thank you! Your message has been received.";
+  const msg = document.getElementById("formMessage");
+  msg.textContent = "✅ Message sent successfully!";
+  msg.style.color = "green";
   this.reset();
 });
 
