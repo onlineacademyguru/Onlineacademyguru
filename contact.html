@@ -120,6 +120,7 @@
     <form id="contactForm" action="https://formsubmit.co/onlineacademyguru@gmail.com" method="POST">
       <!-- ⚠️ Replace the email above with your real email if needed -->
       <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="submission_time" id="submissionTime">
 
       <label>Your Name</label>
       <input type="text" name="name" placeholder="Enter your name" required>
@@ -152,9 +153,26 @@
 <script>
   const form = document.getElementById('contactForm');
   const thankYou = document.getElementById('thankYouMessage');
+  const submissionTimeField = document.getElementById('submissionTime');
 
   form.addEventListener('submit', async function (event) {
     event.preventDefault();
+
+ // ✅ Add current IST time before sending
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // +5:30 hrs in ms
+    const istTime = new Date(now.getTime() + istOffset);
+    submissionTimeField.value = istTime.toLocaleString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour12: true,
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
 
     const formData = new FormData(form);
     const action = form.getAttribute('action');
