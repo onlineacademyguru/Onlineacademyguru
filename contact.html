@@ -37,13 +37,20 @@
       gap: 15px;
     }
 
-    input, textarea {
+    input, textarea, select {
       padding: 12px;
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 1rem;
       width: 100%;
       box-sizing: border-box;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #2a3d66;
+      box-shadow: 0 0 5px rgba(42, 61, 102, 0.5);
     }
 
     button {
@@ -118,9 +125,16 @@
   <!-- ✅ Contact Form (No CAPTCHA + Inline Thank You) -->
   <div class="form-container">
     <form id="contactForm" action="https://formsubmit.co/onlineacademyguru@gmail.com" method="POST">
-      <!-- ⚠️ Replace the email above with your real email if needed -->
       <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="submission_time" id="submissionTime">
+      <input type="hidden" name="submission_time" id="submissionTime">
+
+      <label for="role">I am a:</label>
+      <select id="role" name="role" required>
+        <option value="">Select</option>
+        <option value="Educator">Educator</option>
+        <option value="Student">Student</option>
+        <option value="Parent/Guardian">Parent/Guardian</option>
+      </select>
 
       <label>Your Name</label>
       <input type="text" name="name" placeholder="Enter your name" required>
@@ -128,8 +142,8 @@
       <label>Email Address</label>
       <input type="email" name="email" placeholder="Enter your email" required>
 
-      <label>Mobile number</label>
-      <input type="Mobile number" name="Mobile number" placeholder="Mobile number" required>
+      <label>Mobile Number</label>
+      <input type="tel" name="mobile" placeholder="Enter your mobile number" required pattern="[0-9]{10}">
 
       <label>Message</label>
       <textarea name="message" rows="5" placeholder="Write your message here..." required></textarea>
@@ -158,7 +172,7 @@
   form.addEventListener('submit', async function (event) {
     event.preventDefault();
 
- // ✅ Add current IST time before sending
+    // ✅ Add current IST time before sending
     const now = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000; // +5:30 hrs in ms
     const istTime = new Date(now.getTime() + istOffset);
@@ -173,21 +187,25 @@
       minute: '2-digit'
     });
 
-
     const formData = new FormData(form);
     const action = form.getAttribute('action');
 
-    const response = await fetch(action, {
-      method: 'POST',
-      body: formData
-    });
+    try {
+      const response = await fetch(action, {
+        method: 'POST',
+        body: formData
+      });
 
-    if (response.ok) {
-      form.reset();
-      form.style.display = 'none';
-      thankYou.style.display = 'block';
-    } else {
-      alert('There was a problem submitting your form. Please try again later.');
+      if (response.ok) {
+        form.reset();
+        form.style.display = 'none';
+        thankYou.style.display = 'block';
+      } else {
+        alert('There was a problem submitting your form. Please try again later.');
+      }
+    } catch (error) {
+      alert('Form submission failed. Please check your internet connection.');
+      console.error(error);
     }
   });
 </script>
