@@ -28,6 +28,7 @@
       border-radius: 12px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
       padding: 25px;
+      position: relative;
     }
 
     form {
@@ -58,6 +59,27 @@
 
     button:hover {
       background: #1e2d50;
+    }
+
+    .thankyou-message {
+      display: none;
+      text-align: center;
+      padding: 30px;
+      background: #f5f8ff;
+      border: 1px solid #cbd5e0;
+      border-radius: 12px;
+      margin-top: 15px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .thankyou-message h3 {
+      color: #2a3d66;
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
@@ -93,15 +115,11 @@
     <p>If you have questions or want to enroll, please reach out to us.</p>
   </div>
 
-  <!-- ✅ Contact Form (No CAPTCHA, Sends to Email) -->
+  <!-- ✅ Contact Form (No CAPTCHA + Inline Thank You) -->
   <div class="form-container">
-    <form action="https://formsubmit.co/onlineacademyguru@gmail.com" method="POST">
-      <!-- ⚠️ Replace the email above with your real email if different -->
-
-      <!-- Prevent spam -->
+    <form id="contactForm" action="https://formsubmit.co/onlineacademyguru@gmail.com" method="POST">
+      <!-- ⚠️ Replace the email above with your real email if needed -->
       <input type="hidden" name="_captcha" value="false">
-      <!-- Redirect after submission (optional) -->
-      <input type="hidden" name="_next" value="https://onlineacademyguru.github.io/Onlineacademyguru/thankyou.html">
 
       <label>Your Name</label>
       <input type="text" name="name" placeholder="Enter your name" required>
@@ -109,11 +127,21 @@
       <label>Email Address</label>
       <input type="email" name="email" placeholder="Enter your email" required>
 
+      <label>Mobile number</label>
+      <input type="Mobile number" name="Mobile number" placeholder="Mobile number" required>
+
       <label>Message</label>
       <textarea name="message" rows="5" placeholder="Write your message here..." required></textarea>
 
       <button type="submit">Send Message</button>
     </form>
+
+    <!-- Hidden thank you message -->
+    <div class="thankyou-message" id="thankYouMessage">
+      <h3>🎉 Thank You!</h3>
+      <p>Your message has been sent successfully.<br>
+      We’ll get in touch with you shortly.</p>
+    </div>
   </div>
 </section>
 
@@ -121,7 +149,31 @@
   <p>© 2025 Online Academy Guru. All rights reserved.</p>
 </footer>
 
-<script src="script.js"></script>
+<script>
+  const form = document.getElementById('contactForm');
+  const thankYou = document.getElementById('thankYouMessage');
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const action = form.getAttribute('action');
+
+    const response = await fetch(action, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      form.reset();
+      form.style.display = 'none';
+      thankYou.style.display = 'block';
+    } else {
+      alert('There was a problem submitting your form. Please try again later.');
+    }
+  });
+</script>
+
 </body>
 </html>
 
